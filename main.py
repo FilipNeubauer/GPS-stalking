@@ -3,19 +3,19 @@ import turtle
 
 
 # top left corner of the picture
-ZERO_LANTITUDE = 49.21863
+ZERO_LATITUDE = 49.21863
 ZERO_LONGTITUDE = 16.59469
 LEFT_TOP_X = -400   # turtle coordinations
 LEFT_TOP_Y = 400
 
 # crossroad Domazlicka and Stefanikova
-cross_lantitude = 49.215486
+cross_latitude = 49.215486
 cross_longtitude = 16.599775
 cross_x = -161
 cross_y = 169
 
 # ratios
-LANTITUDE_TO_Y = (ZERO_LANTITUDE - cross_lantitude) / (LEFT_TOP_Y - cross_y)
+LATITUDE_TO_Y = (ZERO_LATITUDE - cross_latitude) / (LEFT_TOP_Y - cross_y)
 LONGTITUDE_TO_X = (ZERO_LONGTITUDE - cross_longtitude) / (LEFT_TOP_X - cross_x)
 
 
@@ -38,7 +38,7 @@ def input_data():
             if line.startswith("$GPRMC"):
                 if chksum_nmea(line.rstrip()):
                     list_all = line.split(",")
-                    cor_num = lan_long_num(list_all[3], list_all[5])
+                    cor_num = la_long_num(list_all[3], list_all[5])
                     list_cor.append(cor_num)
                 else:
                     print(f"ERROR ON LINE {index}")
@@ -52,7 +52,7 @@ def input_data():
             elif line.startswith("$GPGGA"):
                 if chksum_nmea(line.rstrip()):
                     list_all = line.split(",")
-                    cor_num = lan_long_num(list_all[2], list_all[4])
+                    cor_num = la_long_num(list_all[2], list_all[4])
                     list_cor.append(cor_num)
                 else:
                     print(f"ERROR ON LINE {index}")
@@ -77,15 +77,15 @@ def input_data():
     return list_cor
 
 
-def lan_long_num(lantitude, longtitude):
-    lan_num = float(lantitude[:2]) + float(lantitude[2:])/60
+def la_long_num(latitude, longtitude):
+    la_num = float(latitude[:2]) + float(latitude[2:])/60
     long_num = float(longtitude[:3]) + float(longtitude[3:])/60
 
-    return lan_num, long_num
+    return la_num, long_num
 
 
-def pixels(lantitude, longtitude):
-    y = (LANTITUDE_TO_Y * LEFT_TOP_Y + lantitude - ZERO_LANTITUDE)/LANTITUDE_TO_Y
+def pixels(latitude, longtitude):
+    y = (LATITUDE_TO_Y * LEFT_TOP_Y + latitude - ZERO_LATITUDE)/LATITUDE_TO_Y
     x = (LONGTITUDE_TO_X * LEFT_TOP_X + longtitude - ZERO_LONGTITUDE)/LONGTITUDE_TO_X
 
     return x, y
@@ -101,9 +101,8 @@ def main():
     tr.penup()
     tr.setpos(pixels(cor[0][0], cor[0][1]))
     tr.pendown()
-    for index, i in enumerate(cor[1:]):
+    for i in cor[1:]:
         tr.setpos(pixels(i[0], i[1]))
-        print(index, pixels(i[0], i[1]))
 
     wn.mainloop()
 
